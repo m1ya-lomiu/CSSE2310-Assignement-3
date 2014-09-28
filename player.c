@@ -40,7 +40,7 @@ void exit_status(int condition){
 }
 
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
 	int playerNum = atoi(argv[1]);
 	if(argc != 3){

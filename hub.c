@@ -47,12 +47,46 @@
  	}
  }
 
+/**
+ * Read deck file
+ * @param file* filename
+ * @return int numOfRows
+ */
+int read_file(char *filename, char **deckContent){
+ 	FILE *fp;
+	char row[1000];
+	int numOfRows = 0;
+  
+	fp = fopen(filename, "r");
+	if(fp == NULL){
+		exit_status(EXIT_FILE);
+  	}
+    
+  	while(fgets(row, sizeof(row), fp)!= NULL) {
+    	strcpy(*deckContent, row);
+    	deckContent++;
+    	numOfRows++;
+  	}
+    
+  	fclose(fp);
+  	return numOfRows;
+}
 
 
-
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-	/*Calculate the number of players*/
+	/* Store the content of the deck file */
+	char **deckContent;
+	deckContent = malloc(1000 * sizeof(char*));
+	for(int i=0; i<1000; i++){
+   		deckContent[i] = malloc(1000 * sizeof(char));
+  	}
+
+  	int numOfRounds;
+  	/* Read from the deck file */
+  	numOfRounds = read_file(argv[1], deckContent);
+
+	/* Calculate the number of players */
 	int numOfPlayer = argc - 2;
 	char strNumOfPlayer[15];
 	sprintf(strNumOfPlayer, "%d", numOfPlayer);
@@ -60,7 +94,7 @@ int main(int argc, char const *argv[])
 	pid_t pid[numOfPlayer];
 	int child_status;
 
-	/*Start running the players' programs*/
+	/* Start running the players' programs */
 	for(int i = 0; i < numOfPlayer; i++){
 		int sizeOfArg = strlen(argv[i+1]);
 		char *playerName;
@@ -76,5 +110,11 @@ int main(int argc, char const *argv[])
 			wait(&child_status);
 		}
 	}
+
+	/* Free the deckContent*/
+	for(int i=0; i<1000; i++){
+    	free(deckContent[i]);
+  	}
+  	free(deckContent);
 	
 }
