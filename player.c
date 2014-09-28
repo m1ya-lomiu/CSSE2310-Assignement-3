@@ -23,7 +23,7 @@ void exit_status(int condition){
 			fprintf(stderr, "Usage: player number_of_players myid\n");
 			exit(EXIT_USAGE);
 		case EXIT_PNUM:
-			fprintf(stderr, "Invalid player conutn\n");
+			fprintf(stderr, "Invalid player count\n");
 			exit(EXIT_PNUM);
 		case EXIT_BAD_ID:
 			fprintf(stderr, "Invalid player ID\n");
@@ -48,5 +48,7 @@ int main(int argc, char const *argv[])
 	}else if(playerNum < 2 || playerNum > 4){
 		exit_status(EXIT_PNUM);
 	}
+
+	printf("%s\n", argv[2]);
 	return 0;
 }

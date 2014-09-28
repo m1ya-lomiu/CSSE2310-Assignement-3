@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 
 /* Exit status number*/
 #define EXIT_USAGE 1
@@ -51,5 +52,29 @@
 
 int main(int argc, char const *argv[])
 {
-	return 0;
+	/*Calculate the number of players*/
+	int numOfPlayer = argc - 2;
+	char strNumOfPlayer[15];
+	sprintf(strNumOfPlayer, "%d", numOfPlayer);
+
+	pid_t pid[numOfPlayer];
+	int child_status;
+
+	/*Start running the players' programs*/
+	for(int i = 0; i < numOfPlayer; i++){
+		int sizeOfArg = strlen(argv[i+1]);
+		char *playerName;
+		playerName = malloc(sizeOfArg);
+		playerName[0]='\0';
+		strcat(playerName, argv[i+2]);
+
+		if((pid[i] = fork()) == 0){
+			/*Child*/
+			execlp("./player", "./player", strNumOfPlayer, playerName, NULL);					
+		}else{
+			/*Parent*/
+			wait(&child_status);
+		}
+	}
+	
 }
